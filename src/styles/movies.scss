@@ -1,3 +1,5 @@
+@import "../styles/variables";
+
 .container {
     padding-top: 100px;
     color: #fff;
@@ -241,7 +243,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 999;
+            z-index: $z-index-modal;
             width: 100%;
             height: 100vh;
             border: 3px solid #fff;
@@ -275,7 +277,7 @@
                 position: absolute;
                 top: 0;
                 right: 0px;
-                z-index: 999;
+                z-index: $z-index-modal;
                 display: block;
                 width: 75px;
                 height: 60px;
@@ -310,6 +312,6 @@
     justify-items: center;
 
     @media (max-width: 720px) {
-        grid-template-columns: repeat(auto-fill, minmax(139px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
     }
 }
