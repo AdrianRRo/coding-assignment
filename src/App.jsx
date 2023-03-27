@@ -26,10 +26,10 @@ const App = () => {
 
   const getSearchResults = (query) => {
     if (query !== '') {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+query))
+      dispatch(fetchMovies({ apiUrl: ENDPOINT_SEARCH, query }))
       setSearchParams(createSearchParams({ search: query }))
     } else {
-      dispatch(fetchMovies(ENDPOINT_DISCOVER))
+      dispatch(fetchMovies({ apiUrl: ENDPOINT_DISCOVER }))
       setSearchParams()
     }
   }
@@ -39,11 +39,11 @@ const App = () => {
     getSearchResults(query)
   }
 
-  const getMovies = () => {
+  const getMovies = (page) => {
     if (searchQuery) {
-        dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+searchQuery))
+        dispatch(fetchMovies({ apiUrl: ENDPOINT_SEARCH, query: searchQuery, page }))
     } else {
-        dispatch(fetchMovies(ENDPOINT_DISCOVER))
+        dispatch(fetchMovies({ apiUrl: ENDPOINT_DISCOVER, query: undefined, page }))
     }
   }
 
@@ -79,7 +79,7 @@ const App = () => {
       <Header searchMovies={searchMovies} searchParams={searchParams} setSearchParams={setSearchParams} />
       <div className="container">
         <Routes>
-          <Route path="/" element={<Movies movies={movies.movies.results || []} viewTrailer={viewTrailer} />} />
+          <Route path="/" element={<Movies movies={movies.movies.results || []} viewTrailer={viewTrailer} onEndReach={getMovies} />} />
           <Route path="/starred" element={<Starred viewTrailer={viewTrailer} />} />
           <Route path="/watch-later" element={<WatchLater viewTrailer={viewTrailer} />} />
           <Route path="*" element={<h1 className="not-found">Page Not Found</h1>} />
