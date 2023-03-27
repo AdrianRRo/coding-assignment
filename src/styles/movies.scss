@@ -1,3 +1,5 @@
+@import "../styles/variables";
+
 .container {
     padding-top: 100px;
     color: #fff;
@@ -9,11 +11,6 @@
     a {
         color: #1CB5E0;
         text-decoration: none;
-    }
-
-    .wrapper {
-        padding: 0 6px;
-        margin-bottom: 2rem;
     }
 
     .card, 
@@ -102,6 +99,7 @@
 
     .card-body {
         position: relative;
+        flex: unset;
         padding: 0;
 
         &:hover {
@@ -184,6 +182,7 @@
     text-align: center;
     background: transparent;
     border: none;
+    max-width: 250px;
 
     &.opened {
         & + .hero-card {
@@ -244,12 +243,13 @@
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 999;
+            z-index: $z-index-modal;
             width: 100%;
-            height: auto;
+            height: 100vh;
             border: 3px solid #fff;
             border-radius: 5px;
             transform: none;
+            max-width: 100%;
 
             .overlay {
                 opacity: 0.7;
@@ -277,7 +277,7 @@
                 position: absolute;
                 top: 0;
                 right: 0px;
-                z-index: 999;
+                z-index: $z-index-modal;
                 display: block;
                 width: 75px;
                 height: 60px;
@@ -291,10 +291,31 @@
                     vertical-align: text-top;
                 }
             }
+
+            .center-block, .card-body {
+                height: 100%;
+            }
         }
     }
     
     @media (max-width: 720px) {
         background-color: transparent;
     }    
+}
+
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(174px, 1fr));
+    justify-content: center;
+    grid-gap: 20px;
+    padding-bottom: 50px;
+    justify-items: center;
+
+    @media (max-width: 720px) {
+        grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
+    }
+}
+
+.movies-loader {
+    padding-bottom: 50px;
 }

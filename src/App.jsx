@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Routes, Route, createSearchParams, useSearchParams, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import 'reactjs-popup/dist/index.css'
@@ -10,6 +10,8 @@ import Starred from './components/Starred'
 import WatchLater from './components/WatchLater'
 import YouTubePlayer from './components/YoutubePlayer'
 import './app.scss'
+import Modal from './components/Modal/Modal'
+import { ModalContext } from './contexts/ModalContext'
 
 const App = () => {
 
@@ -19,21 +21,15 @@ const App = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchQuery = searchParams.get('search')
   const [videoKey, setVideoKey] = useState()
-  const [isOpen, setOpen] = useState(false)
   const navigate = useNavigate()
-  
-  const closeModal = () => setOpen(false)
-  
-  const closeCard = () => {
-
-  }
+  const { isModalOpen, openModal } = useContext(ModalContext);
 
   const getSearchResults = (query) => {
     if (query !== '') {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+query))
+      dispatch(fetchMovies({ apiUrl: ENDPOINT_SEARCH, query }))
       setSearchParams(createSearchParams({ search: query }))
     } else {
-      dispatch(fetchMovies(ENDPOINT_DISCOVER))
+      dispatch(fetchMovies({ apiUrl: ENDPOINT_DISCOVER }))
       setSearchParams()
     }
   }
@@ -43,18 +39,16 @@ const App = () => {
     getSearchResults(query)
   }
 
-  const getMovies = () => {
+  const getMovies = (page) => {
     if (searchQuery) {
-        dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+searchQuery))
+        dispatch(fetchMovies({ apiUrl: ENDPOINT_SEARCH, query: searchQuery, page }))
     } else {
-        dispatch(fetchMovies(ENDPOINT_DISCOVER))
+        dispatch(fetchMovies({ apiUrl: ENDPOINT_DISCOVER, query: undefined, page }))
     }
   }
 
   const viewTrailer = (movie) => {
     getMovie(movie.id)
-    if (!videoKey) setOpen(true)
-    setOpen(true)
   }
 
   const getMovie = async (id) => {
@@ -68,6 +62,7 @@ const App = () => {
       const trailer = videoData.videos.results.find(vid => vid.type === 'Trailer')
       setVideoKey(trailer ? trailer.key : videoData.videos.results[0].key)
     }
+    openModal();
   }
 
   useEffect(() => {
@@ -76,19 +71,15 @@ const App = () => {
 
   return (
     <div className="App">
-      <Header searchMovies={searchMovies} searchParams={searchParams} setSearchParams={setSearchParams} />
-
-      <div className="container">
-        {videoKey ? (
-          <YouTubePlayer
-            videoKey={videoKey}
-          />
-        ) : (
-          <div style={{padding: "30px"}}><h6>no trailer available. Try another movie</h6></div>
+      {isModalOpen && videoKey && (
+          <Modal>
+            <YouTubePlayer videoKey={videoKey}/>
+          </Modal>
         )}
-
+      <Header searchMovies={searchMovies} searchParams={searchParams} setSearchParams={setSearchParams} />
+      <div className="container">
         <Routes>
-          <Route path="/" element={<Movies movies={movies} viewTrailer={viewTrailer} closeCard={closeCard} />} />
+          <Route path="/" element={<Movies movies={movies.movies.results || []} viewTrailer={viewTrailer} onEndReach={getMovies} />} />
           <Route path="/starred" element={<Starred viewTrailer={viewTrailer} />} />
           <Route path="/watch-later" element={<WatchLater viewTrailer={viewTrailer} />} />
           <Route path="*" element={<h1 className="not-found">Page Not Found</h1>} />

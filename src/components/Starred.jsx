@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import starredSlice from '../data/starredSlice'
-import Movie from './Movie'
+import Movies from './Movies'
 import '../styles/starred.scss'
 
 const Starred = ({viewTrailer}) => {
@@ -15,15 +15,7 @@ const Starred = ({viewTrailer}) => {
     <div className="starred" data-testid="starred">
       {starred.starredMovies.length > 0 && (<div data-testid="starred-movies" className="starred-movies">
         <h6 className="header">Starred movies</h6>
-        <div className="row">
-        {starred.starredMovies.map((movie) => (
-          <Movie 
-            movie={movie} 
-            key={movie.id}
-            viewTrailer={viewTrailer}
-          />
-        ))}
-        </div>
+        <Movies movies={starred.starredMovies} viewTrailer={viewTrailer} />
 
         <footer className="text-center">
           <button className="btn btn-primary" onClick={() => dispatch(clearAllStarred())}>Remove all starred</button>

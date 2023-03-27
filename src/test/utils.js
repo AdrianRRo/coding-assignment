@@ -7,6 +7,7 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import moviesSlice from '../data/moviesSlice'
 import starredSlice from '../data/starredSlice'
 import watchLaterSlice from '../data/watchLaterSlice'
+import { ModalProvider } from '../contexts/ModalContext';
 
 export function renderWithProviders(
   ui,
@@ -27,7 +28,8 @@ export function renderWithProviders(
   setupListeners(store.dispatch)
 
   function Wrapper({ children }) {
-    return <Provider store={store}><BrowserRouter>{children}</BrowserRouter></Provider>;
+    
+    return <Provider store={store}><BrowserRouter><ModalProvider>{children}</ModalProvider></BrowserRouter></Provider>;
   }
 
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
