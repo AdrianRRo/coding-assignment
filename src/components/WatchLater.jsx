@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import watchLaterSlice from '../data/watchLaterSlice'
-import Movie from './Movie'
+import Movies from './Movies'
 import '../styles/starred.scss'
 
 const WatchLater = ({viewTrailer}) => {
@@ -15,15 +15,7 @@ const WatchLater = ({viewTrailer}) => {
     <div className="starred" data-testid="watch-later-div">
       {watchLater.watchLaterMovies.length > 0 && (<div data-testid="watch-later-movies" className="starred-movies">
         <h6 className="header">Watch Later List</h6>
-        <div className="row">
-        {watchLater.watchLaterMovies.map((movie) => (
-          <Movie 
-            movie={movie} 
-            key={movie.id}
-            viewTrailer={viewTrailer}
-          />
-        ))}
-        </div>
+        <Movies movies={watchLater.watchLaterMovies} viewTrailer={viewTrailer} />
 
         <footer className="text-center">
           <button className="btn btn-primary" onClick={() => dispatch(remveAllWatchLater())}>Empty list</button>

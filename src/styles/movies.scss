@@ -11,11 +11,6 @@
         text-decoration: none;
     }
 
-    .wrapper {
-        padding: 0 6px;
-        margin-bottom: 2rem;
-    }
-
     .card, 
     .card *,
     .card + * {
@@ -102,6 +97,7 @@
 
     .card-body {
         position: relative;
+        flex: unset;
         padding: 0;
 
         &:hover {
@@ -184,6 +180,7 @@
     text-align: center;
     background: transparent;
     border: none;
+    max-width: 250px;
 
     &.opened {
         & + .hero-card {
@@ -246,10 +243,11 @@
             left: 0;
             z-index: 999;
             width: 100%;
-            height: auto;
+            height: 100vh;
             border: 3px solid #fff;
             border-radius: 5px;
             transform: none;
+            max-width: 100%;
 
             .overlay {
                 opacity: 0.7;
@@ -291,10 +289,27 @@
                     vertical-align: text-top;
                 }
             }
+
+            .center-block, .card-body {
+                height: 100%;
+            }
         }
     }
     
     @media (max-width: 720px) {
         background-color: transparent;
     }    
+}
+
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(174px, 1fr));
+    justify-content: center;
+    grid-gap: 20px;
+    padding-bottom: 50px;
+    justify-items: center;
+
+    @media (max-width: 720px) {
+        grid-template-columns: repeat(auto-fill, minmax(139px, 1fr));
+    }
 }
